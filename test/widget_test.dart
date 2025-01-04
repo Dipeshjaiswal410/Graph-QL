@@ -1,30 +1,23 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:sample/main.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:sample/main.dart';  // Ensure this path points to your main.dart
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Test MyApp widget', (WidgetTester tester) async {
+    // Initialize the GraphQL Flutter cache
+    await initHiveForFlutter();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final HttpLink httpLink = HttpLink('https://countries.trevorblades.com/');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final GraphQLClient client = GraphQLClient(
+      cache: GraphQLCache(),
+      link: httpLink,
+    );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Provide the mock GraphQLClient to MyApp (without 'const' keyword)
+    await tester.pumpWidget(MyApp(client: client));
+
+    // Add test expectations
+    expect(find.byType(MyApp), findsOneWidget);
   });
 }
