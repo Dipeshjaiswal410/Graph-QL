@@ -1,0 +1,40 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test_and_build:
+    name: Test and Build Flutter App (Debug Mode)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Run tests
+      run: flutter test
+
+    - name: Build Debug APK
+      run: flutter build apk --debug
+
+    - name: Archive Debug APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: debug-apk
+        path: build/app/outputs/flutter-apk/app-debug.apk
