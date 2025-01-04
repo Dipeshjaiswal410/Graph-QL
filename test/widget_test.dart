@@ -14,7 +14,7 @@ void main() {
       link: httpLink,
     );
 
-    // Provide the mock GraphQLClient to MyApp (without 'const' keyword)
+    // Provide the mock GraphQLClient to MyApp (WITHOUT 'const' keyword)
     await tester.pumpWidget(MyApp(client: client));
 
     // Add test expectations
